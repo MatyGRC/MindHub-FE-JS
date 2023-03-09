@@ -1,4 +1,6 @@
 const tarjetasPs = document.getElementById('cards-ps')
+const buscador = document.getElementById('buscador')
+const checkboxes = document.querySelectorAll('.checkbox')
 
 function eventosPs() {
     let array = []
@@ -34,3 +36,40 @@ function crearEventos(arrayEventos) {
 
 let past = crearEventos(pastEv)
 tarjetasPs.innerHTML = past
+
+function seeDetail(id) {
+  window.location.href = `./details.html?id=${id}`
+}
+
+let inputBuscador = ""
+
+buscador.addEventListener("keyup",(event)=>{
+  inputBuscador = event.target.value;
+  buscadorFilter();
+});
+
+function buscadorFilter(){ 
+  let eventFiltrado = [];
+ 
+   if(inputBuscador !== ""){
+    eventFiltrado.push(...eventos.events.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
+     );  
+     tarjetasPs.innerHTML = crearEventos(eventFiltrado);
+   }else{
+    tarjetasPs.innerHTML = pastEv;
+   }
+}
+
+let checkInfo = []
+
+for (const checkbox of checkboxes) {
+  checkbox.addEventListener("click",() => {
+    if (checkbox.checked) {
+      checkInfo.push(...eventos.events.filter((event)=>event.category == checkbox.value))
+      tarjetasPs.innerHTML = crearEventos(checkInfo)
+    }
+    else {
+      tarjetasPs.innerHTML = pastEv;
+    }
+  });
+}

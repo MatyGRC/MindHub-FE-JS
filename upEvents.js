@@ -1,4 +1,6 @@
-const tarjetasPs = document.getElementById('cards-up')
+const tarjetasUp = document.getElementById('cards-up')
+const buscador = document.getElementById('buscador')
+const checkboxes = document.querySelectorAll('.checkbox')
 
 function eventoUp() {
     let array = []
@@ -33,4 +35,41 @@ function crearEventos(arrayEventos) {
 }
 
 let upcoming = crearEventos(upEv)
-tarjetasPs.innerHTML = upcoming
+tarjetasUp.innerHTML = upcoming
+
+function seeDetail(id) {
+  window.location.href = `./details.html?id=${id}`
+}
+
+let inputBuscador = ""
+
+buscador.addEventListener("keyup",(event)=>{
+  inputBuscador = event.target.value;
+  buscadorFilter();
+});
+
+function buscadorFilter(){ 
+  let eventFiltrado = [];
+ 
+   if(inputBuscador !== ""){
+    eventFiltrado.push(...eventos.events.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
+     );  
+     tarjetasUp.innerHTML = crearEventos(eventFiltrado);
+   }else{
+    tarjetasUp.innerHTML = upcoming;
+   }
+}
+
+let checkInfo = []
+
+for (const checkbox of checkboxes) {
+  checkbox.addEventListener("click",() => {
+    if (checkbox.checked) {
+      checkInfo.push(...eventos.events.filter((event)=>event.category == checkbox.value))
+      tarjetasUp.innerHTML = crearEventos(checkInfo)
+    }
+    else {
+      tarjetasUp.innerHTML = upcoming;
+    }
+  });
+}
