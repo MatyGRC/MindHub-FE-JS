@@ -2,17 +2,13 @@ const tarjetasPs = document.getElementById('cards-ps')
 const buscador = document.getElementById('buscador')
 const checkboxes = document.querySelectorAll('.checkbox')
 
-function eventosPs() {
-    let array = []
+ let pastEv = []
+ 
     for (let index = 0; index < eventos.events.length; index++) {
      if (eventos.events[index].date < eventos.currentDate) {
-        array.push(eventos.events[index])
+      pastEv.push(eventos.events[index])
      }
     }
-    return array
-}
-
-let pastEv = eventosPs()
 
 function crearEventos(arrayEventos) {
     let eventosPs = ''
@@ -52,11 +48,11 @@ function buscadorFilter(){
   let eventFiltrado = [];
  
    if(inputBuscador !== ""){
-    eventFiltrado.push(...eventos.events.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
+    eventFiltrado.push(...pastEv.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
      );  
      tarjetasPs.innerHTML = crearEventos(eventFiltrado);
    }else{
-    tarjetasPs.innerHTML = pastEv;
+    tarjetasPs.innerHTML = past;
    }
 }
 
@@ -65,11 +61,11 @@ let checkInfo = []
 for (const checkbox of checkboxes) {
   checkbox.addEventListener("click",() => {
     if (checkbox.checked) {
-      checkInfo.push(...eventos.events.filter((event)=>event.category == checkbox.value))
+      checkInfo.push(...pastEv.filter((event)=>event.category == checkbox.value))
       tarjetasPs.innerHTML = crearEventos(checkInfo)
     }
     else {
-      tarjetasPs.innerHTML = pastEv;
+      tarjetasPs.innerHTML = past;
     }
   });
 }

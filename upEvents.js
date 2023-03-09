@@ -52,7 +52,7 @@ function buscadorFilter(){
   let eventFiltrado = [];
  
    if(inputBuscador !== ""){
-    eventFiltrado.push(...eventos.events.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
+    eventFiltrado.push(...upEv.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
      );  
      tarjetasUp.innerHTML = crearEventos(eventFiltrado);
    }else{
@@ -65,7 +65,7 @@ let checkInfo = []
 for (const checkbox of checkboxes) {
   checkbox.addEventListener("click",() => {
     if (checkbox.checked) {
-      checkInfo.push(...eventos.events.filter((event)=>event.category == checkbox.value))
+      checkInfo.push(...upEv.filter((event)=>event.category == checkbox.value))
       tarjetasUp.innerHTML = crearEventos(checkInfo)
     }
     else {
