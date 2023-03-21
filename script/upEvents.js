@@ -8,8 +8,9 @@ fetch(urlApi)
 .then(response => response.json())
 .then(data => {
     eventosFuturos = eventosFut(data.events, data.currentDate)
-    tarjetasUp.innerHTML = crearEventos(eventosFuturos)
+    crearEventos(eventosFuturos)
     crearCheckboxes(eventosFuturos)
+    checkboxFiltro(eventosFuturos)
 })
 .catch(error => {
   console.log(error);
@@ -38,7 +39,7 @@ function crearEventos(arrayEventos) {
        </div>
       </div>`
     }
-    return eventosUp
+    tarjetasUp.innerHTML = eventosUp
 }
 
 function seeDetail(id) {
@@ -63,6 +64,7 @@ function checkboxFiltro(array) {
   let checkbox = document.querySelectorAll('input[type="checkbox"]')
   let arrayChecks = Array.from(checkbox)
   let checkboxChecks = arrayChecks.filter(check => check.checked)
+  console.log(checkboxChecks);
   let checkboxValue = checkboxChecks.map(check => check.value)
   let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
   console.log(checkFilter);
@@ -82,9 +84,9 @@ function buscadorFiltro(array, texto) {
 function dobleFiltro() {
   let primerFiltro = buscadorFiltro(eventosFuturos, buscador.value)
   let segundoFiltro = checkboxFiltro(primerFiltro)
-  tarjetasUp.innerHTML = crearEventos(segundoFiltro)
+  crearEventos(segundoFiltro)
 }
 
 buscador.addEventListener('input', dobleFiltro)
-contenedorCheck.addEventListener('change', dobleFiltro)
+contenedorCheck.addEventListener('change',dobleFiltro)
 
