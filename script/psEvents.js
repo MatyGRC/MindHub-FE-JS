@@ -10,7 +10,7 @@ fetch(urlApi)
 .then(response => response.json())
 .then(data => {
     eventosPasados = eventosPas(data.events, data.currentDate)
-    tarjetasPs.innerHTML = crearEventos(eventosPasados)
+    crearEventos(eventosPasados)
     crearCheckboxes(eventosPasados)
 })
 .catch(error => {
@@ -41,12 +41,55 @@ function crearEventos(arrayEventos) {
        </div>
       </div>`
     }
-    return eventosPs
+    tarjetasPs.innerHTML = eventosPs
 }
 
 function seeDetail(id) {
   window.location.href = `./details.html?id=${id}`
 }
+
+function crearCheckboxes(array) {
+  let eventsCategories = array.map(event => event.category)
+  let arrayCategories = Array.from(new Set(eventsCategories))
+  let checkboxes = ''
+  arrayCategories.forEach(category => {
+    checkboxes += `
+  <div class="form-check-inline">
+  <input class="form-check-input" type="checkbox" id="${category}" value="${category}">
+  <label class="form-check-label" for="${category}">${category}</label>
+  </div>`
+  })
+  contenedorCheck.innerHTML = checkboxes
+}
+
+function checkboxFiltro(array) {
+  let checkbox = document.querySelectorAll('input[type="checkbox"]')
+  let arrayChecks = Array.from(checkbox)
+  let checkboxChecks = arrayChecks.filter(check => check.checked)
+  let checkboxValue = checkboxChecks.map(check => check.value)
+  let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
+  console.log(checkFilter);
+  
+   if(checkboxChecks.lenght > 0){
+    return checkFilter
+   } else {
+    return array  
+   }
+  }
+
+function buscadorFiltro(array, texto) {
+  let arrayBuscador = array.filter(evento => evento.name.toLowerCase().includes(texto.toLowerCase()))
+  return arrayBuscador
+}
+
+function dobleFiltro() {
+  let primerFiltro = buscadorFiltro(eventosPasados, buscador.value)
+  let segundoFiltro = checkboxFiltro(primerFiltro)
+  crearEventos(segundoFiltro)
+}
+
+buscador.addEventListener('input', dobleFiltro)
+contenedorCheck.addEventListener('change', dobleFiltro)
 
 /* let inputBuscador = ""
 
@@ -90,46 +133,3 @@ maxAssist = Math.max(...asistencia)
                 <label class="form-check-label" for="Food Fair">Food Fair</label>
               </div>
 */
-
-function crearCheckboxes(array) {
-  let eventsCategories = array.map(event => event.category)
-  let arrayCategories = Array.from(new Set(eventsCategories))
-  let checkboxes = ''
-  arrayCategories.forEach(category => {
-    checkboxes += `
-  <div class="form-check-inline">
-  <input class="form-check-input" type="checkbox" id="${category}" value="${category}">
-  <label class="form-check-label" for="${category}">${category}</label>
-  </div>`
-  })
-  contenedorCheck.innerHTML = checkboxes
-}
-
-function checkboxFiltro(array) {
-  let checkbox = document.querySelectorAll('input[type="checkbox"]')
-  let arrayChecks = Array.from(checkbox)
-  let checkboxChecks = arrayChecks.filter(check => check.checked)
-  let checkboxValue = checkboxChecks.map(check => check.value)
-  let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
-  console.log(checkFilter);
-  
-   if(checkboxChecks.lenght > 0){
-    return checkFilter
-   } else {
-    return array  
-   }
-  }
-
-function buscadorFiltro(array, texto) {
-  let arrayBuscador = array.filter(evento => evento.name.toLowerCase().includes(texto.toLowerCase()))
-  return arrayBuscador
-}
-
-function dobleFiltro() {
-  let primerFiltro = buscadorFiltro(eventosPasados, buscador.value)
-  let segundoFiltro = checkboxFiltro(primerFiltro)
-  tarjetasPs.innerHTML = crearEventos(segundoFiltro)
-}
-
-buscador.addEventListener('input', dobleFiltro)
-contenedorCheck.addEventListener('change', dobleFiltro)

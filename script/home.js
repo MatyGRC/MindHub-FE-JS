@@ -8,7 +8,7 @@ fetch(urlApi)
 .then(response => response.json())
 .then(data => {
     evento = data.events
-    tarjetasHome.innerHTML = crearEventos(evento)
+    crearEventos(evento)
     crearCheckboxes(evento)
 })
 .catch(error => {
@@ -35,7 +35,7 @@ function crearEventos(arrayEventos) {
        </div>
       </div>`
     }
-    return eventosHome
+    tarjetasHome.innerHTML = eventosHome
 }
 
 function seeDetail(id) {
@@ -55,26 +55,6 @@ function crearCheckboxes(array) {
   })
   contenedorCheck.innerHTML = checkboxes
 }
-
-/* function listaFiltrada(arrayEventos) {
-  arrayEventos.forEach(evento => {
-    let eventfiltrado += 
-  }
-} */
-
-/* let eventFilter = function(event) {
-  keyword = buscador.value.toLowerCase();
-  let eventFiltrado = eventos.events.filter(function(evento) {
-    evento = evento.toLowerCase();
-    return evento.indexOf(keyword) > -1;
-  });
-  crearEventos(eventFiltrado);
-}
-
-/* buscador.addEventListener('keyup', () => {
-  let eventFiltrado = eventos.events.filter((evento)=>evento.name.toLowerCase().includes(buscador.value.toLowerCase()))
-  crearEventos(eventFiltrado)
-}) */
 
 function crearCheckboxes(array) {
   let eventsCategories = array.map(event => event.category)
@@ -113,7 +93,7 @@ function buscadorFiltro(array, texto) {
 function dobleFiltro() {
   let primerFiltro = buscadorFiltro(evento, buscador.value)
   let segundoFiltro = checkboxFiltro(primerFiltro)
-  tarjetasHome.innerHTML = crearEventos(segundoFiltro)
+  crearEventos(segundoFiltro)
 }
 
 buscador.addEventListener('input', dobleFiltro)
@@ -159,3 +139,24 @@ checkboxes.forEach((check) => {
     }
   }
 )} */
+
+
+/* function listaFiltrada(arrayEventos) {
+  arrayEventos.forEach(evento => {
+    let eventfiltrado += 
+  }
+} */
+
+/* let eventFilter = function(event) {
+  keyword = buscador.value.toLowerCase();
+  let eventFiltrado = eventos.events.filter(function(evento) {
+    evento = evento.toLowerCase();
+    return evento.indexOf(keyword) > -1;
+  });
+  crearEventos(eventFiltrado);
+}
+
+/* buscador.addEventListener('keyup', () => {
+  let eventFiltrado = eventos.events.filter((evento)=>evento.name.toLowerCase().includes(buscador.value.toLowerCase()))
+  crearEventos(eventFiltrado)
+}) */
