@@ -1,19 +1,23 @@
 const tarjetasUp = document.getElementById('cards-up')
 const buscador = document.getElementById('buscador')
-const checkboxes = document.querySelectorAll('.checkbox')
+const contenedorCheck = document.getElementById('checkContainer')
 
-function eventoUp() {
-    let array = []
-    for (let index = 0; index < eventos.events.length; index++) {
-     if (eventos.events[index].date > eventos.currentDate) {
-        array.push(eventos.events[index])
-     }
-    }
-    return array
+let urlApi = "https://mindhub-xj03.onrender.com/api/amazing"
+let eventosFuturos = []
+fetch(urlApi)
+.then(response => response.json())
+.then(data => {
+    eventosFuturos = eventosFut(data.events, data.currentDate)
+    tarjetasUp.innerHTML = crearEventos(eventosFuturos)
+    crearCheckboxes(eventosFuturos)
+})
+.catch(error => {
+  console.log(error);
+})
+
+function eventosFut(data, currentDate) {
+  return data.filter(evento => evento.date > currentDate)
 }
-
-let upEv = eventoUp()
-
 function crearEventos(arrayEventos) {
     let eventosUp = ''
     for (const evento of arrayEventos) {
@@ -26,7 +30,7 @@ function crearEventos(arrayEventos) {
         </div>
         <div class="card-footer d-flex flex-column align-items-center">
           <p class="card-text">Price: $ ${evento.price}</p>
-          <button type="button" class="btn btn-outline-danger">See more...</button>
+          <a type="button" href="./details.html?id=${evento._id}" class="btn btn-outline-danger" value="See more" id="button">Details</a>
         </div>
        </div>
       </div>`
@@ -34,42 +38,50 @@ function crearEventos(arrayEventos) {
     return eventosUp
 }
 
-let upcoming = crearEventos(upEv)
-tarjetasUp.innerHTML = upcoming
-
 function seeDetail(id) {
   window.location.href = `./details.html?id=${id}`
 }
 
-let inputBuscador = ""
+function crearCheckboxes(array) {
+  let eventsCategories = array.map(event => event.category)
+  let arrayCategories = Array.from(new Set(eventsCategories))
+  let checkboxes = ''
+  arrayCategories.forEach(category => {
+    checkboxes += `
+  <div class="form-check-inline">
+  <input class="form-check-input" type="checkbox" id="${category}" value="${category}">
+  <label class="form-check-label" for="${category}">${category}</label>
+  </div>`
+  })
+  contenedorCheck.innerHTML = checkboxes
+}
 
-buscador.addEventListener("keyup",(event)=>{
-  inputBuscador = event.target.value;
-  buscadorFilter();
-});
-
-function buscadorFilter(){ 
-  let eventFiltrado = [];
- 
-   if(inputBuscador !== ""){
-    eventFiltrado.push(...upEv.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
-     );  
-     tarjetasUp.innerHTML = crearEventos(eventFiltrado);
-   }else{
-    tarjetasUp.innerHTML = upcoming;
+function checkboxFiltro(array) {
+  let checkbox = document.querySelectorAll('input[type="checkbox"]')
+  let arrayChecks = Array.from(checkbox)
+  let checkboxChecks = arrayChecks.filter(check => check.checked)
+  let checkboxValue = checkboxChecks.map(check => check.value)
+  let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
+  console.log(checkFilter);
+  
+   if(checkboxChecks.lenght > 0){
+    return checkFilter
+   } else {
+    return array  
    }
+  }
+
+function buscadorFiltro(array, texto) {
+  let arrayBuscador = array.filter(evento => evento.name.toLowerCase().includes(texto.toLowerCase()))
+  return arrayBuscador
 }
 
-let checkInfo = []
-
-for (const checkbox of checkboxes) {
-  checkbox.addEventListener("click",() => {
-    if (checkbox.checked) {
-      checkInfo.push(...upEv.filter((event)=>event.category == checkbox.value))
-      tarjetasUp.innerHTML = crearEventos(checkInfo)
-    }
-    else {
-      tarjetasUp.innerHTML = upcoming;
-    }
-  });
+function dobleFiltro() {
+  let primerFiltro = buscadorFiltro(eventosFuturos, buscador.value)
+  let segundoFiltro = checkboxFiltro(primerFiltro)
+  tarjetasUp.innerHTML = crearEventos(segundoFiltro)
 }
+
+buscador.addEventListener('input', dobleFiltro)
+contenedorCheck.addEventListener('change', dobleFiltro)
+

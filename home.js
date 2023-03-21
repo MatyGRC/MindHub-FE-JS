@@ -1,6 +1,19 @@
 const tarjetasHome = document.getElementById('cards-home')
 const buscador = document.getElementById('buscador')
-const checkboxes = document.querySelectorAll('.checkbox')
+const contenedorCheck = document.getElementById('checkContainer')
+
+let urlApi = "https://mindhub-xj03.onrender.com/api/amazing"
+let evento = []
+fetch(urlApi)
+.then(response => response.json())
+.then(data => {
+    evento = data.events
+    tarjetasHome.innerHTML = crearEventos(evento)
+    crearCheckboxes(evento)
+})
+.catch(error => {
+  console.log(error);
+})
 
 function crearEventos(arrayEventos) {
     let eventosHome = ''
@@ -22,11 +35,22 @@ function crearEventos(arrayEventos) {
     return eventosHome
 }
 
-let home = crearEventos(eventos.events)
-tarjetasHome.innerHTML = home
-
 function seeDetail(id) {
   window.location.href = `./details.html?id=${id}`
+}
+
+function crearCheckboxes(array) {
+  let eventsCategories = array.map(event => event.category)
+  let arrayCategories = Array.from(new Set(eventsCategories))
+  let checkboxes = ''
+  arrayCategories.forEach(category => {
+    checkboxes += `
+  <div class="form-check-inline">
+  <input class="form-check-input" type="checkbox" id="${category}" value="${category}">
+  <label class="form-check-label" for="${category}">${category}</label>
+  </div>`
+  })
+  contenedorCheck.innerHTML = checkboxes
 }
 
 /* function listaFiltrada(arrayEventos) {
@@ -49,35 +73,86 @@ function seeDetail(id) {
   crearEventos(eventFiltrado)
 }) */
 
-let inputBuscador = ""
-
-buscador.addEventListener("keyup",(event)=>{
-  inputBuscador = event.target.value;
-  buscadorFilter();
-});
-
-function buscadorFilter(){ 
-  let eventFiltrado = [];
- 
-   if(inputBuscador !== ""){
-    eventFiltrado.push(...eventos.events.filter((event)=>event.name.toLocaleLowerCase().includes(inputBuscador.toLocaleLowerCase()))
-     );  
-     tarjetasHome.innerHTML = crearEventos(eventFiltrado);
-   }else{
-     tarjetasHome.innerHTML = home;
-   }
+function crearCheckboxes(array) {
+  let eventsCategories = array.map(event => event.category)
+  let arrayCategories = Array.from(new Set(eventsCategories))
+  let checkboxes = ''
+  arrayCategories.forEach(category => {
+    checkboxes += `
+  <div class="form-check-inline">
+  <input class="form-check-input" type="checkbox" id="${category}" value="${category}">
+  <label class="form-check-label" for="${category}">${category}</label>
+  </div>`
+  })
+  contenedorCheck.innerHTML = checkboxes
 }
 
-let checkInfo = []
+function checkboxFiltro(array) {
+  let checkbox = document.querySelectorAll('input[type="checkbox"]')
+  let arrayChecks = Array.from(checkbox)
+  let checkboxChecks = arrayChecks.filter(check => check.checked)
+  let checkboxValue = checkboxChecks.map(check => check.value)
+  let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
+  console.log(checkFilter);
+  
+   if(checkboxChecks.lenght > 0){
+    return checkFilter
+   } else {
+    return array  
+   }
+  }
 
-for (const checkbox of checkboxes) {
+function buscadorFiltro(array, texto) {
+  let arrayBuscador = array.filter(evento => evento.name.toLowerCase().includes(texto.toLowerCase()))
+  return arrayBuscador
+}
+
+function dobleFiltro() {
+  let primerFiltro = buscadorFiltro(evento, buscador.value)
+  let segundoFiltro = checkboxFiltro(primerFiltro)
+  tarjetasHome.innerHTML = crearEventos(segundoFiltro)
+}
+
+buscador.addEventListener('input', dobleFiltro)
+contenedorCheck.addEventListener('change', dobleFiltro)
+
+
+
+/* checkboxes.addEventListener("change",() => {
+  const checkedValues = [] 
+  checkedValues.filter(input => input.checked).map(input => input.value);
+  const checkInfo = eventos.events.filter(({ category }) => checkedValues.includes(category));
+  console.log(checkInfo);
+}); */
+
+/* 
+checkboxes.forEach((check) => {
+  check.addEventListener('click', (event) => {
+    let checked = event.target.checked
+    if (checked) {
+      checkInfo.push(...eventos.events.filter((event)=>event.category == checkboxes.value))
+      tarjetasHome.innerHTML = crearEventos(checkInfo)
+    }
+    else if (unchecked) { 
+      checkInfo = checkInfo.filter((uncheck) => uncheck !== event.target.value);
+      checkInfo.push(...eventos.events.filter((event)=>event.category == checkboxes.value));
+      tarjetasHome.innerHTML = crearEventos(checkInfo)
+      } 
+    else {
+      tarjetasHome.innerHTML = home
+
+    }
+  })
+ }); */
+
+/* for (const checkbox of checkboxes) {
   checkbox.addEventListener("click",() => {
     if (checkbox.checked) {
-      checkInfo.push(...eventos.events.filter((event)=>event.category == checkbox.value))
+      let checkInfo = eventos.events.map((event)=>event.category == checkbox.value)
       tarjetasHome.innerHTML = crearEventos(checkInfo)
     }
     else {
       tarjetasHome.innerHTML = home;
     }
-  });
-}
+  }
+)} */
