@@ -16,6 +16,9 @@ fetch(urlApi)
 })
 
 function crearEventos(arrayEventos) {
+  if(arrayEventos.length == 0){
+   return tarjetasHome.innerHTML = `<h2 class="display-1 fw-bolder">No se encontraron eventos 😥</h2>`
+}
     let eventosHome = ''
     for (const evento of arrayEventos) {
         eventosHome += `<div class="col d-flex align-items-stretch">

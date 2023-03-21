@@ -22,6 +22,9 @@ function eventosPas(data, currentDate) {
 }
 
 function crearEventos(arrayEventos) {
+  if(arrayEventos.length == 0){
+    return tarjetasPs.innerHTML = `<h2 class="display-1 fw-bolder">No se encontraron eventos 😥</h2>`
+ }
     let eventosPs = ''
     for (const evento of arrayEventos) {
         eventosPs += `<div class="col d-flex align-items-stretch">

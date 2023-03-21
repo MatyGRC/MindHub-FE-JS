@@ -19,6 +19,9 @@ function eventosFut(data, currentDate) {
   return data.filter(evento => evento.date > currentDate)
 }
 function crearEventos(arrayEventos) {
+  if(arrayEventos.length == 0){
+    return tarjetasUp.innerHTML = `<h2 class="display-1 fw-bolder">No se encontraron eventos 😥</h2>`
+ }
     let eventosUp = ''
     for (const evento of arrayEventos) {
         eventosUp += `<div class="col d-flex align-items-stretch">
