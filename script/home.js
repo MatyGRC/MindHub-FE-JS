@@ -78,7 +78,7 @@ function checkboxFiltro(array) {
   let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
   console.log(checkFilter);
   
-   if(checkboxChecks.lenght > 0){
+   if(checkboxChecks.length > 0){
     return checkFilter
    } else {
     return array  
