@@ -64,10 +64,8 @@ function checkboxFiltro(array) {
   let checkbox = document.querySelectorAll('input[type="checkbox"]')
   let arrayChecks = Array.from(checkbox)
   let checkboxChecks = arrayChecks.filter(check => check.checked)
-  console.log(checkboxChecks);
   let checkboxValue = checkboxChecks.map(check => check.value)
   let checkFilter = array.filter(evento => checkboxValue.includes(evento.category))
-  console.log(checkFilter);
   
    if(checkboxChecks.length > 0){
     return checkFilter
